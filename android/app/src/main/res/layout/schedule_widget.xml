@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="18dp"
+    android:background="#FAFAFA"> <!-- Off-white background untuk kesan soft -->
+
+    <!-- HEADER (Aksen Slate Blue) -->
+    <TextView
+        android:id="@+id/widget_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Jadwalin"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="#7C8B9F" 
+        android:layout_marginBottom="10dp"/>
+
+    <!-- GARIS PEMISAH: Menggunakan FrameLayout (Aman untuk Widget) -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E5E5E5"
+        android:layout_marginBottom="14dp"/>
+
+    <!-- LABEL KELAS (Aksen Sage Green) -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="KULIAH HARI INI"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        android:textColor="#9BB098" 
+        android:layout_marginBottom="4dp"/>
+
+    <!-- INFO KELAS -->
+    <TextView
+        android:id="@+id/widget_kelas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tidak ada kelas"
+        android:textSize="14sp"
+        android:textColor="#222222"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- LABEL KEGIATAN (Aksen Dusty Peach) -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="AGENDA LAINNYA"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        android:textColor="#E2B49A" 
+        android:layout_marginBottom="4dp"/>
+
+    <!-- INFO KEGIATAN -->
+    <TextView
+        android:id="@+id/widget_event"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tidak ada kegiatan"
+        android:textSize="14sp"
+        android:textColor="#555555"/>
+
+</LinearLayout>

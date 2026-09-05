@@ -162,7 +162,7 @@ class _KelasFormScreenState extends State<KelasFormScreen> {
 
             // Hari
             DropdownButtonFormField<int>(
-              value: _hariIndex,
+              initialValue: _hariIndex,
               decoration: const InputDecoration(
                 labelText: 'Hari',
                 border: OutlineInputBorder(),

@@ -61,7 +61,7 @@ class _KelasDetailScreenState extends State<KelasDetailScreen>
       body: NestedScrollView(
         headerSliverBuilder: (ctx, _) => [
           SliverAppBar(
-            expandedHeight: 200,
+            expandedHeight: 240, // naik dari 200
             pinned: true,
             backgroundColor: colorScheme.surface,
             foregroundColor: colorScheme.onSurface,
@@ -81,6 +81,7 @@ class _KelasDetailScreenState extends State<KelasDetailScreen>
             ],
             flexibleSpace: FlexibleSpaceBar(
               background: _buildHeader(kelas, color, colorScheme),
+              collapseMode: CollapseMode.pin,
             ),
             bottom: TabBar(
               controller: _tabController,
@@ -92,7 +93,7 @@ class _KelasDetailScreenState extends State<KelasDetailScreen>
               indicatorColor: color,
               labelColor: color,
               unselectedLabelColor: colorScheme.outline,
-              dividerColor: colorScheme.outlineVariant.withOpacity(0.3),
+              dividerColor: colorScheme.outlineVariant.withValues(alpha: 0.3),
             ),
           ),
         ],
@@ -112,8 +113,13 @@ class _KelasDetailScreenState extends State<KelasDetailScreen>
 
   Widget _buildHeader(Kelas kelas, Color color, ColorScheme colorScheme) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(20, 80, 20, 16),
-      decoration: BoxDecoration(color: color.withOpacity(0.06)),
+      padding: const EdgeInsets.fromLTRB(
+        20,
+        90,
+        20,
+        60,
+      ), // bawah 60 biar clear dari TabBar
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.06)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,7 +130,7 @@ class _KelasDetailScreenState extends State<KelasDetailScreen>
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.15),
+                  color: color.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Icon(Icons.school_rounded, color: color, size: 24),
@@ -139,6 +145,8 @@ class _KelasDetailScreenState extends State<KelasDetailScreen>
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.w800,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 2),
                     Text(
@@ -147,16 +155,18 @@ class _KelasDetailScreenState extends State<KelasDetailScreen>
                         fontSize: 13,
                         color: colorScheme.onSurfaceVariant,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          // Info pills
+          const SizedBox(height: 10),
           Wrap(
             spacing: 8,
+            runSpacing: 6,
             children: [
               _infoPill(
                 Icons.calendar_today_rounded,
@@ -180,7 +190,7 @@ class _KelasDetailScreenState extends State<KelasDetailScreen>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -206,8 +216,9 @@ class _KelasDetailScreenState extends State<KelasDetailScreen>
   Widget _buildInfoTab(Kelas kelas, Color color) {
     final colorScheme = Theme.of(context).colorScheme;
     final total = _rekap.values.fold(0, (a, b) => a + b);
-    final hadir = _rekap[StatusPresensi.hadir] ?? 0;
-    final persen = total == 0 ? 0.0 : hadir / total;
+    final alpa = _rekap[StatusPresensi.alpa] ?? 0;
+    final masuk = total - alpa;
+    final persen = total == 0 ? 0.0 : masuk / total;
     final persenColor = _getPersenColor(persen);
 
     return ListView(
@@ -233,7 +244,7 @@ class _KelasDetailScreenState extends State<KelasDetailScreen>
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: persenColor.withOpacity(0.1),
+                      color: persenColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -266,7 +277,7 @@ class _KelasDetailScreenState extends State<KelasDetailScreen>
                   Padding(
                     padding: const EdgeInsets.only(bottom: 4),
                     child: Text(
-                      '$hadir dari $total hadir',
+                      '$masuk dari $total pertemuan (alpa: $alpa)',
                       style: TextStyle(
                         fontSize: 13,
                         color: colorScheme.outline,
@@ -329,9 +340,9 @@ class _KelasDetailScreenState extends State<KelasDetailScreen>
             margin: const EdgeInsets.only(bottom: 12),
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: Colors.red.withOpacity(0.06),
+              color: Colors.red.withValues(alpha: 0.06),
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: Colors.red.withOpacity(0.2)),
+              border: Border.all(color: Colors.red.withValues(alpha: 0.2)),
             ),
             child: Row(
               children: [
@@ -384,7 +395,7 @@ class _KelasDetailScreenState extends State<KelasDetailScreen>
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.08),
+          color: color.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -399,7 +410,10 @@ class _KelasDetailScreenState extends State<KelasDetailScreen>
             ),
             Text(
               label,
-              style: TextStyle(fontSize: 11, color: color.withOpacity(0.8)),
+              style: TextStyle(
+                fontSize: 11,
+                color: color.withValues(alpha: 0.8),
+              ),
             ),
           ],
         ),
@@ -433,7 +447,8 @@ class _KelasDetailScreenState extends State<KelasDetailScreen>
     );
   }
 
-  Widget _divider() => Divider(height: 1, color: Colors.grey.withOpacity(0.15));
+  Widget _divider() =>
+      Divider(height: 1, color: Colors.grey.withValues(alpha: 0.15));
 
   // ── Tab Presensi ───────────────────────────────────────────────────────────
 
@@ -472,10 +487,12 @@ class _KelasDetailScreenState extends State<KelasDetailScreen>
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: colorScheme.outlineVariant.withOpacity(0.5)),
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -490,7 +507,7 @@ class _KelasDetailScreenState extends State<KelasDetailScreen>
               width: 38,
               height: 38,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -525,7 +542,7 @@ class _KelasDetailScreenState extends State<KelasDetailScreen>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
@@ -639,7 +656,7 @@ class _KelasDetailScreenState extends State<KelasDetailScreen>
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         decoration: BoxDecoration(
                           color: isSelected
-                              ? color.withOpacity(0.15)
+                              ? color.withValues(alpha: 0.15)
                               : colorScheme.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
@@ -733,10 +750,12 @@ class _KelasDetailScreenState extends State<KelasDetailScreen>
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: colorScheme.outlineVariant.withOpacity(0.5)),
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -757,7 +776,7 @@ class _KelasDetailScreenState extends State<KelasDetailScreen>
                   width: 38,
                   height: 38,
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
+                    color: color.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
@@ -1014,10 +1033,12 @@ class _KelasDetailScreenState extends State<KelasDetailScreen>
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: colorScheme.outlineVariant.withOpacity(0.5)),
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

@@ -27,6 +27,9 @@ class Quest extends HiveObject {
   @HiveField(6)
   late int xpReward; // XP yang didapat kalau selesai
 
+  @HiveField(7)
+  late List<String> lampiranPaths; // path file/gambar
+
   StatusQuest get status => StatusQuest.values[statusIndex];
   set status(StatusQuest s) => statusIndex = s.index;
 
@@ -38,13 +41,19 @@ class Quest extends HiveObject {
     required this.deadline,
     StatusQuest status = StatusQuest.belum,
     this.xpReward = 100,
+    List<String>? lampiran,
   }) {
     statusIndex = status.index;
+    lampiranPaths = lampiran ?? [];
   }
 
   bool get isOverdue =>
       deadline.isBefore(DateTime.now()) && status != StatusQuest.selesai;
 
-  int get daysUntilDeadline =>
-      deadline.difference(DateTime.now()).inDays;
+  int get daysUntilDeadline {
+    final now = DateTime.now();
+    final deadlineDate = DateTime(deadline.year, deadline.month, deadline.day);
+    final todayDate = DateTime(now.year, now.month, now.day);
+    return deadlineDate.difference(todayDate).inDays;
+  }
 }

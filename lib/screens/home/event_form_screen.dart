@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/event.dart';
 import '../../services/database_service.dart';
+import '../../services/notification_service.dart';
 
 class EventFormScreen extends StatefulWidget {
   final Event? event;
@@ -67,14 +68,25 @@ class _EventFormScreenState extends State<EventFormScreen> {
 
   String _formatDate(DateTime d) {
     final months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun',
-      'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'Mei',
+      'Jun',
+      'Jul',
+      'Ags',
+      'Sep',
+      'Okt',
+      'Nov',
+      'Des',
     ];
     return '${d.day} ${months[d.month - 1]} ${d.year}';
   }
 
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
+
     final event = Event(
       id: _isEdit ? widget.event!.id : DatabaseService.generateId(),
       judul: _judulController.text.trim(),
@@ -86,7 +98,12 @@ class _EventFormScreenState extends State<EventFormScreen> {
       jamSelesai: _formatTime(_jamSelesai),
       warna: _warna,
     );
+
     await DatabaseService.saveEvent(event);
+
+    // Jadwalkan notif 15 menit sebelum event
+    await NotificationService.scheduleEventReminder(event);
+
     if (mounted) Navigator.pop(context);
   }
 
@@ -95,9 +112,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_isEdit ? 'Edit Kegiatan' : 'Tambah Kegiatan'),
-        actions: [
-          TextButton(onPressed: _save, child: const Text('Simpan')),
-        ],
+        actions: [TextButton(onPressed: _save, child: const Text('Simpan'))],
       ),
       body: Form(
         key: _formKey,
@@ -151,9 +166,12 @@ class _EventFormScreenState extends State<EventFormScreen> {
                   child: OutlinedButton.icon(
                     onPressed: () async {
                       final picked = await showTimePicker(
-                          context: context, initialTime: _jamMulai);
-                      if (picked != null)
+                        context: context,
+                        initialTime: _jamMulai,
+                      );
+                      if (picked != null) {
                         setState(() => _jamMulai = picked);
+                      }
                     },
                     icon: const Icon(Icons.access_time),
                     label: Text('Mulai: ${_formatTime(_jamMulai)}'),
@@ -164,9 +182,12 @@ class _EventFormScreenState extends State<EventFormScreen> {
                   child: OutlinedButton.icon(
                     onPressed: () async {
                       final picked = await showTimePicker(
-                          context: context, initialTime: _jamSelesai);
-                      if (picked != null)
+                        context: context,
+                        initialTime: _jamSelesai,
+                      );
+                      if (picked != null) {
                         setState(() => _jamSelesai = picked);
+                      }
                     },
                     icon: const Icon(Icons.access_time),
                     label: Text('Selesai: ${_formatTime(_jamSelesai)}'),
@@ -202,8 +223,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                       ),
                     ),
                     child: isSelected
-                        ? const Icon(Icons.check,
-                            color: Colors.white, size: 20)
+                        ? const Icon(Icons.check, color: Colors.white, size: 20)
                         : null,
                   ),
                 );

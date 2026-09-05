@@ -23,13 +23,15 @@ class QuestAdapter extends TypeAdapter<Quest> {
       matkul: fields[3] as String,
       deadline: fields[4] as DateTime,
       xpReward: fields[6] as int,
-    )..statusIndex = fields[5] as int;
+    )
+      ..statusIndex = fields[5] as int
+      ..lampiranPaths = (fields[7] as List).cast<String>();
   }
 
   @override
   void write(BinaryWriter writer, Quest obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -43,7 +45,9 @@ class QuestAdapter extends TypeAdapter<Quest> {
       ..writeByte(5)
       ..write(obj.statusIndex)
       ..writeByte(6)
-      ..write(obj.xpReward);
+      ..write(obj.xpReward)
+      ..writeByte(7)
+      ..write(obj.lampiranPaths);
   }
 
   @override

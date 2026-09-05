@@ -23,7 +23,7 @@ class KuliahSchedulerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Kuliah Scheduler',
+      title: 'Jadwalin',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(

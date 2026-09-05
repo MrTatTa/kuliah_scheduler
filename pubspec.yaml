@@ -50,8 +50,13 @@ dependencies:
   # ID unik
   uuid: ^4.4.2
 
+  intl: ^0.19.0
+
   # Icon pack
   cupertino_icons: ^1.0.8
+
+  image_picker: ^1.1.2        # ambil foto/gambar dari gallery atau kamera
+  file_picker: ^8.1.2         # ambil file (PDF, doc, dll)
 
 dev_dependencies:
   flutter_test:
@@ -61,6 +66,13 @@ dev_dependencies:
   # Code generator untuk Hive
   hive_generator: ^2.0.1
   build_runner: ^2.4.13
+
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/launcher.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
